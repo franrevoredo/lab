@@ -98,6 +98,7 @@ main (int argc, char *const *argv)
 
 void *hilo (void *arg)
 {
+  pthread_detach(pthread_self());
   long int sd_conn = (long int) arg;
   http_worker (sd_conn, (struct sockaddr *) &cli_addr);
   pthread_exit (NULL);
