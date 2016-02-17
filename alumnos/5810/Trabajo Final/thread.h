@@ -7,8 +7,8 @@ extern "C" {
 #include <stdio.h>
 #include <pthread.h>
 #include "http_worker.h"
+
     
-    extern params_t params;
     void * thread(void *arg);
 
 #ifdef	__cplusplus

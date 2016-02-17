@@ -1,7 +1,8 @@
 #include <unistd.h>
 #include <string.h>
+#include "http_response.h"
 
-unsigned long long int http_response(int mime, int sd_conn, int fd) {
+met_it_t http_response(int mime, int sd_conn, int fd) {
 
     int leido = 0;
     char buff[4096];
@@ -21,7 +22,6 @@ unsigned long long int http_response(int mime, int sd_conn, int fd) {
                 write(sd_conn, buff, sizeof buff);
             }
             write(sd_conn, "\n\n", 2);
-            return 0;
             break;
 
         case 2:
@@ -31,7 +31,6 @@ unsigned long long int http_response(int mime, int sd_conn, int fd) {
                 write(sd_conn, buff, sizeof buff);
             }
             write(sd_conn, "\n\n", 2);
-            return 0;
             break;
 
         case 3:
@@ -41,7 +40,6 @@ unsigned long long int http_response(int mime, int sd_conn, int fd) {
                 write(sd_conn, buff, leido);
             }
             write(sd_conn, "\n\n", 2);
-            return 0;
             break;
 
         case 4:
@@ -51,7 +49,6 @@ unsigned long long int http_response(int mime, int sd_conn, int fd) {
                 write(sd_conn, buff, sizeof buff);
             }
             write(sd_conn, "\n\n", 2);
-            return 0;
             break;
 
         case 5:
@@ -61,40 +58,47 @@ unsigned long long int http_response(int mime, int sd_conn, int fd) {
                 write(sd_conn, buff, sizeof buff);
             }
             write(sd_conn, "\n\n", 2);
-            return 0;
             break;
 
-        case 10:
-            return 10;
+        case 11:
+            met_it.it = 10;
+            met_it.met = 'a';
+            return met_it;
             break;
 
-        case 1000:
-            return 1000;
+        case 1001:
+            met_it.it = 1000;
+            met_it.met = 'a';
+            return met_it;
             break;
 
-        case 100000:
-            return 100000;
-            break;
+        case 100001:
+            met_it.it = 100000;
+            met_it.met = 'a';
+            return met_it;
 
-        case 1000000:
-            return 1000000;
-            break;
+        case 1000001:
+            met_it.it = 1000000;
+            met_it.met = 'a';
+            return met_it;
 
-        case 10000000:
-            return 10000000;
-            break;
+        case 10000001:
+            met_it.it = 10000000;
+            met_it.met = 'a';
+            return met_it;
 
-        case 50000000:
-            return 50000000;
-            break;
+        case 50000001:
+            met_it.it = 50000000;
+            met_it.met = 'a';
+            return met_it;
 
-        case 100000000:
-            return 100000000;
-            break;
         case 100000001:
-            return 1000000000;
-            break;
+            met_it.it = 100000000;
+            met_it.met = 'a';
+            return met_it;
     }
-    
-    return 0;
+
+    met_it.it = 0;
+    met_it.met = 0;
+    return met_it;
 }

@@ -12,8 +12,9 @@
 extern "C" {
 #endif
 
-
-    unsigned long long int http_response(int mime, int sd_conn, int fd);
+#include "http_worker.h" 
+    
+    met_it_t http_response(int mime, int sd_conn, int fd);
 
 
 #ifdef	__cplusplus

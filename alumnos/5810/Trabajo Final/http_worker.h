@@ -33,7 +33,7 @@ extern "C" {
 
     struct sockaddr *cli_addr;
 
-    typedef struct http_req {
+    typedef struct http_req { //Estructura que contiene el parseo del request HTTP
         char method[6];
         char url[RES_LEN];
         char ver[10];
@@ -41,13 +41,23 @@ extern "C" {
 
     extern http_req_t req;
 
-    typedef struct params {
+    typedef struct params { //Estructura que contiene el los parametros a enviar a cada thread
         pthread_mutex_t mutex;
         unsigned long long int coef;
+        int thr_id;
         long double h;
+        char method;
     } params_t;
 
     extern params_t params;
+
+    typedef struct met_it { //Estructura que contiene el calculo a realizar y las iteraciones
+        unsigned long long int it;
+        char met;
+    } met_it_t;
+
+    met_it_t met_it;
+
 
     void http_worker(int sd_conn, struct sockaddr *cli_addr);
 

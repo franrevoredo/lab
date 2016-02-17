@@ -9,7 +9,7 @@
 /* Variables Compartidas */
 
 long double sum = 0.0;
-int tid = 1;
+
 
 void http_worker(int sd_conn, struct sockaddr *cli_addr) {
 
@@ -24,11 +24,11 @@ void http_worker(int sd_conn, struct sockaddr *cli_addr) {
 
     char urlaux[256] = "";
     http_req_t req;
+
     int i = 0;
     int len;
     int fd, mime;
     int http_ok = 0;
-    unsigned long long int ifpi = 0;
     char buff[4096];
 
     char rhtml[] = "HTTP/1.1 200 OK\nContent-Type: text/html; charset=utf-8\nConnection:close\n\n";
@@ -84,27 +84,32 @@ void http_worker(int sd_conn, struct sockaddr *cli_addr) {
 
 
     if (http_ok == 2) {
-        ifpi = http_response(mime, sd_conn, fd);
+        met_it = http_response(mime, sd_conn, fd);
     }
 
-    if (ifpi > 0) {
+    if (met_it.it > 0) {
         memset(buff, 0, sizeof buff);
 
         clock_t begin, end;
         double ms;
 
-        begin = clock(); //Comienzo a Calcular Pi
+        begin = clock(); //Comienzo a medir el tiempo del cálculo
 
-        int i;
-        unsigned long long int coef = ifpi / NUM_THREADS; //Calculo cuantas iteraciones le corresponde a cada thread del pool.
-        long double h = 1.0 / (long double) ifpi;
+        unsigned long long int coef = met_it.it / NUM_THREADS; //Calculo cuantas iteraciones le corresponde a cada thread del pool.
+        long double h = 1.0 / (long double) met_it.it;
 
+        params_t * params_array = malloc(NUM_THREADS*sizeof(params_t));
+        
         for (i = 0; i < NUM_THREADS; i++) {
 
-            params.coef = coef;
-            params.h = h;
-            pthread_create(&threads[i], NULL, thread, &params);
-            tid++;
+            (params_array+i)->coef = coef;
+            (params_array+i)->h = h;
+            (params_array+i)->method = met_it.met;
+            (params_array+i)->thr_id = i + 1;
+            
+            
+            pthread_create(&threads[i], NULL, thread, &params_array[i]);
+
         }
 
         for (i = 0; i < NUM_THREADS; i++) {
@@ -129,20 +134,19 @@ void http_worker(int sd_conn, struct sockaddr *cli_addr) {
         char httplines[LINECOUNT][LINEMAX];
 
         snprintf(httplines[0], LINEMAX, "<head><title>Cálculo de Pi</title><body><h2><div style='text-decoration: underline;'>Calculo de Pi</div></h2>");
-        snprintf(httplines[1], LINEMAX, "<b>Cantidad de iteraciones:</b> %llu <br>", ifpi);
+        snprintf(httplines[1], LINEMAX, "<b>Cantidad de iteraciones:</b> %llu <br>", met_it.it);
         snprintf(httplines[2], LINEMAX, "<b>El Valor de Pi es:</b> 3.1415926535897932384626433832795028841971693993751058209749445923078164 <br>");
         snprintf(httplines[3], LINEMAX, "<b>El Valor de Pi es:</b> %.21Lf <br>", pi);
         snprintf(httplines[4], LINEMAX, "<b>El tiempo de cálculo fue de:</b> %f segundos. <br><br>", ms);
         snprintf(httplines[5], LINEMAX, "<div style='padding-left: 5px;'><a href='index.html'>Volver</a></div>");
 
 
-        tid = 0;
-
         for (i = 0; i < LINECOUNT; i++) {
             write(sd_conn, httplines[i], strlen(httplines[i]));
         }
 
         sum = 0.0;
+        free(params_array);
 
         write(sd_conn, by, strlen(by));
         write(sd_conn, "\n\n", 2);

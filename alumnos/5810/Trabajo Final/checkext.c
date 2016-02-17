@@ -44,25 +44,25 @@ int checkext(char *arch) {
 
                                     switch (token2[0]) {
                                         case '1':
-                                            return 10;
+                                            return 11;
                                             break;
                                         case '2':
-                                            return 1000;
+                                            return 1001;
                                             break;
                                         case '3':
-                                            return 100000;
+                                            return 100001;
                                             break;
                                         case '4':
-                                            return 1000000;
+                                            return 1000001;
                                             break;
                                         case '5':
-                                            return 10000000;
+                                            return 10000001;
                                             break;
                                         case '6':
-                                            return 50000000;
+                                            return 50000001;
                                             break;
                                         case '7':
-                                            return 100000000;
+                                            return 100000001;
                                             break;
                                         case '8':
                                             return 100000001;
